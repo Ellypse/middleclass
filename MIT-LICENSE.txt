@@ -1,3 +1,4 @@
+Copyright (c) 2018 Renaud "Ellypse" Parize <ellypse@totalrp3.info> @EllypseCelwe
 Copyright (c) 2011 Enrique García Cota
 
 Permission is hereby granted, free of charge, to any person obtaining a

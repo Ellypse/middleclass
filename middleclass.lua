@@ -2,13 +2,14 @@
 --- Middleclass for World of Warcraft
 ---
 --- An adaptation of Enrique García Cota's middleclass for World of Warcraft
---- and to better suit some specific needs I have from an OOP framework.
+--- Some features were added to better suit some specific needs
+--- I have from an OOP framework and better IDE code completion.
 ---
 --- See <https://github.com/kikito/middleclass>
----	---------------------------------------------------------------------------
+----------------------------------------------------------------------------------
 ---     MIT LICENSE
 ---
----    Copyright 2018 Renaud "Ellypse" Parize <ellypse@totalrp3.info> @EllypseCelwe
+---    Copyright (c) 2018 Renaud "Ellypse" Parize <ellypse@totalrp3.info> @EllypseCelwe
 ---    Copyright (c) 2011 Enrique García Cota
 ---
 ---    Permission is hereby granted, free of charge, to any person obtaining a
@@ -37,12 +38,14 @@ end
 
 ---@class AddOn_Lib_Middleclass
 local MiddleClass = {};
+---@type AddOn_Lib_Middleclass|fun(name:string, super:MiddleClass_Class):MiddleClass_Class
+AddOn_Lib_Middleclass = MiddleClass;
 
 --{{{ Final classes
 -- Table of weak keys, for proper garbage collection when instances no longer exists
 local finalClasses = setmetatable({}, { __mode = "k" });
 
---- Makes a MiddleClass_Class Final. It can no longer be inherited from and no new methods can be added to it.
+--- Makes a MiddleClass_Class final. It can no longer be inherited from and no new methods can be added to it.
 ---@param class MiddleClass_Class
 function MiddleClass.final(class)
 	finalClasses[class] = true;
@@ -50,7 +53,7 @@ end
 
 --- Check if a class is Final.
 ---@param class MiddleClass_Class
----@return boolean isFinal Returns true if the class is Final
+---@return boolean Returns true if the class is Final
 local function isFinal(class)
 	return finalClasses[class] == true;
 end
@@ -58,12 +61,18 @@ MiddleClass.isFinal = isFinal;
 --}}}
 
 --{{{ Protected instances
+-- Table of weak keys, for proper garbage collection when instances no longer exists
 local protectedInstances = setmetatable({}, { __mode = "k" });
 
+--- Protects a MiddleClass_Class from being modified, its properties and methods cannot be modified
+---@param instance MiddleClass_Class An instance of a MiddleClass_Class to protect
 function MiddleClass.protected(instance)
 	protectedInstances[instance] = true;
 end
 
+--- Check if an instance of a MiddleClass_Class is protected
+---@param instance MiddleClass_Class
+---@return boolean Returns true if the instance is protected
 local function isProtected(instance)
 	return protectedInstances[instance] == true;
 end
@@ -232,16 +241,16 @@ local ClassMixin = {
 }
 
 --[[ override ]] function ClassMixin:initialize(...)
-	print("Unredefined initializer")
 end
 
+---@return string Returns a string representation of the instance of the class
 function ClassMixin:__tostring()
 	return "instance of " .. tostring(self.class)
 end
 
 --- Check if an object is an instance of the given class.
 ---@param aClass MiddleClass_Class A MiddleClass Class to check.
----@return boolean isAnInstanceOfTheClass Returns true if it is a instance of the given class.
+---@return boolean Returns true if it is a instance of the given class.
 function ClassMixin:IsInstanceOf(aClass)
 	return type(aClass) == 'table'
 			and type(self) == 'table'
@@ -265,7 +274,7 @@ local privateStorage = setmetatable({},{
 --- Private storage table, used to store private properties by indexing the table per instance of a class.
 --- The table has weak indexes which means it will not prevent the objects from being garbage collected.
 --- Example:
---- > `local privateStore = Ellyb.getPrivateStorage()`
+--- > `local privateStore = MiddleClass.getPrivateStorage()`
 --- > `local myClassInstance = MyClass()`
 --- > `privateStore[myClassInstance].privateProperty = someValue`
 ---@return table
@@ -278,7 +287,7 @@ end
 --- Creates a new middleclass Class to use for object oriented programming purposes.
 ---@param name string A name for the new class. It will be used when calling `tostring()` on an instance of the class.
 ---@param super MiddleClass_Class Another class to inherit from.
----@return MiddleClass_Class class A new class with basic methods of object oriented programming.
+---@return MiddleClass_Class A new class with basic methods of object oriented programming.
 ---@overload fun(name:string):MiddleClass_Class
 function MiddleClass.createClass(name, super)
 	assert(type(name) == 'string', "A name (string) is needed for the new class")
@@ -293,5 +302,4 @@ setmetatable(MiddleClass, {
 });
 --}}}
 
----@type AddOn_Lib_Middleclass|fun(name:string, super:MiddleClass_Class):MiddleClass_Class
-AddOn_Lib_Middleclass = MiddleClass;
+return AddOn_Lib_Middleclass
