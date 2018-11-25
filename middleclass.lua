@@ -139,7 +139,7 @@ local function _createClass(name, super)
 	local dict = {}
 	local proxy = {}
 	dict.__index = function(_, field)
-		return dict[field] or proxy[field]
+		return proxy[field] or dict[field]
 	end
 	dict.__newindex = function(self, field, value)
 		if isProtected(self) then
