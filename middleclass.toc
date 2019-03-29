@@ -1,0 +1,9 @@
+## Interface: 80100
+## Title: middleclass
+## Author: Ellypse
+## Version: 4.1.1
+## LoadOnDemand: 0
+## OptionalDeps: West
+
+middleclass.xml
+middleclass_tests.lua

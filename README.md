@@ -41,53 +41,14 @@ function MyClass:SayMyName()
  end
 ```
 
-### Use `:new()` as a constructor
+### Unit tests
 
-While you can still override `:initialize()` as the constructor for the class, modifications allows to redefine the `:new()` method instead. This will not actually redefine new but only pass the implementation to `:initialize()` behind the scene. This is so IDE can provide proper code completion and other features when instantiating a new object using `MyClass:new()`
-
-```lua
-local MyClass = AddOn_Lib_Middleclass("MyClass")
-
-function MyClass:new(name, age, someTable) end
-
-local instance = MyClass:new("name", 3, {})
-```
-
-### Final classes
-
-Classes can be marked as final. When final, they cannot be inherited and methods cannot be added or overridden.
-
-```lua
-local MyClass = AddOn_Lib_Middleclass("MyClass")
-
-function MyClass:DoSomething() end
-
-AddOn_Lib_Middleclass.final(MyClass)
-
-function MyClass:DoADifferentThing() end -- This will raise an error
-local ChildClass = AddOn_Lib_Middleclass("MyClass", MyClass) -- This will raise an error
- 
-```
-
-### Protected instances
-
-Instances of a class can be protected against modifications. When protected, their properties and methods cannot be modified.
-
-```lua
-local MyClass = AddOn_Lib_Middleclass("MyClass")
-
-function MyClass:DoSomething() end
-
-local a = MyClass()
-a.value = 1
-
-AddOn_Lib_Middleclass.protected(a)
-
-function a:DoSomething() end -- This will raise an error
-a.value = 0 -- This will raise an error
-
-```
+I have created some basic unit tests to assert that the library is functioning as intended after my changes (see the `middleclass_tests.lua` file). The tests suite used is [West](https://github.com/moody/West). The tests are only run when this library is loaded like an add-on by the game (using the .toc file instead of being embedded in another add-on) and only if the [West](https://github.com/moody/West) add-on is also loaded.
 
 ### In game documentation
 
-In game documentation can be accessed either by using the `/api` command or via a GUI addon (like [APIInterface](https://www.curseforge.com/wow/addons/apiinterface)). Public methods are properly documented.
+In game documentation can be accessed either by using the `/api MiddleClass list` command or via a GUI add-on (like [APIInterface](https://www.curseforge.com/wow/addons/apiinterface)). Public methods are properly documented.
+
+### TODO
+
+- Proper versioning (using LibStub?)
